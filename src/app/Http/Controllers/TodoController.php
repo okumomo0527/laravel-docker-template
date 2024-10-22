@@ -59,4 +59,12 @@ class TodoController extends Controller
         return redirect()->route('todo.show', $todo->id);
 }
 
+public function delete($id)
+{
+    // TODO: 削除対象のレコードの情報を持つTodoモデルのインスタンスを取得
+        $todo = $this->todo->find($id)->delete();
+
+        return redirect()->route('todo.index');
+}
+
 }
