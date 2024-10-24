@@ -39,18 +39,30 @@ class TodoController extends Controller
 
     public function show($id)
     {
-        $todo = $this->todo->find($id);
-        return view('todo.show', ['todo' => $todo]);
+        // dd($id);
+        $todo = $this->todo->find($id); // 渡されたIDでTodoを取得
+        // dd($todo);
+        return view('todo.show', ['todo' => $todo]);// 取得したTodoをビューに渡す
     }
 
-    public function edit($id)
+    // $todo
+    // "id" => 2
+    // "content" => "Laravel Lessonを終える"
+    // "created_at" => "2024-10-21 09:26:34"
+    // "updated_at" => "2024-10-23 09:54:37"
+    // "deleted_at" => null
+
+    public function edit($id) //edit画面が表示される
     {
         $todo = $this->todo->find($id);
-        return view('todo.edit', ['todo' => $todo]);
+        // dd($todo);
+        return view('todo.edit', compact('todo'));
+        
     }
 
     public function update(TodoRequest $request, $id) // 第1引数: リクエスト情報の取得　第2引数: ルートパラメータの取得
 {
+    // dd($request);
     // TODO: リクエストされた値を取得
         $inputs = $request->all();
         $todo = $this->todo->find($id);
