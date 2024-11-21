@@ -1,0 +1,82 @@
+<?php
+
+namespace App\Http\Controllers;
+
+// use Illuminate\Http\Request;
+use App\Http\Requests\TodoRequest;
+use App\Todo;
+
+class TodoController extends Controller
+{
+    private $todo;
+
+    public function __construct(Todo $todo)
+    {
+        $this->todo = $todo;
+    }
+
+    public function index()
+    {
+        $todos = $this->todo->all();
+
+        return view('todo.index', ['todos' => $todos]);
+    }
+
+    public function create()
+    {
+        return view('todo.create');
+    }
+
+    public function store(TodoRequest $request)
+    {
+        $inputs = $request->all();
+
+        $this->todo->fill($inputs);
+        $this->todo->save();
+
+        return redirect()->route('todo.index');
+    }
+
+    public function show($id)
+    {
+        // dd($id);
+        $todo = $this->todo->find($id); // 渡されたIDでTodoを取得
+        // dd($todo);
+        return view('todo.show', ['todo' => $todo]);// 取得したTodoをビューに渡す
+    }
+
+    // $todo
+    // "id" => 2
+    // "content" => "Laravel Lessonを終える"
+    // "created_at" => "2024-10-21 09:26:34"
+    // "updated_at" => "2024-10-23 09:54:37"
+    // "deleted_at" => null
+
+    public function edit($id) //edit画面が表示される
+    {
+        $todo = $this->todo->find($id);
+        // dd($todo);
+        return view('todo.edit', compact('todo'));
+        
+    }
+
+    public function update(TodoRequest $request, $id) // 第1引数: リクエスト情報の取得　第2引数: ルートパラメータの取得
+{
+    // dd($request);
+    // TODO: リクエストされた値を取得
+        $inputs = $request->all();
+        $todo = $this->todo->find($id);
+        $todo->fill($inputs)->save();
+
+        return redirect()->route('todo.show', $todo->id);
+}
+
+public function delete($id)
+{
+    // TODO: 削除対象のレコードの情報を持つTodoモデルのインスタンスを取得
+        $todo = $this->todo->find($id)->delete();
+
+        return redirect()->route('todo.index');
+}
+
+}
